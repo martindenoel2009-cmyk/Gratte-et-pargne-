@@ -239,7 +239,7 @@ def render_scene(i):
         t = fi / FPS
         im = Image.new("RGB", (SW, SH), BG); d = ImageDraw.Draw(im)
         illus(i, d, t, dur)
-        draw_text(d, placed, t)
+        if not os.environ.get('NOTEXT'): draw_text(d, placed, t)
         pr.stdin.write(im.resize((W, H), Image.LANCZOS).tobytes())
     pr.stdin.close(); pr.wait()
     os.rename(path + ".tmp.mp4", path)
@@ -290,7 +290,8 @@ def build_audio(path):
     t0 = 0
     for i, (text, hl, dur) in enumerate(SCENES):
         if i > 0: add(whoosh(), max(0, t0 - 0.12))
-        for k in range(len(text.split(" "))): add(pop() * 0.6, t0 + k * WORD_T)
+        if not os.environ.get('NOTEXT'):
+            for k in range(len(text.split(" "))): add(pop() * 0.6, t0 + k * WORD_T)
         if i == 0: add(riser(1.3), t0 + 0.2); add(ding() * 0.5, t0 + 0.05)
         if i == 3: add(scratch(dur * 0.9), t0 + 0.05)
         if i == 4: add(ding(), t0 + 0.05); add(coins(), t0 + 0.55)

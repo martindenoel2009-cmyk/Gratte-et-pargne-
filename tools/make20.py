@@ -1,4 +1,4 @@
-import sys, math, subprocess
+import sys, math, subprocess, os
 import numpy as np
 import make as m
 from make import *
@@ -91,7 +91,8 @@ def build_audio(path):
     t0 = 0
     for i, (text, hl, dur) in enumerate(S):
         if i > 0: add(whoosh(), max(0, t0 - 0.12))
-        for k in range(len(text.split(" "))): add(pop() * 0.6, t0 + k * WORD_T)
+        if not os.environ.get('NOTEXT'):
+            for k in range(len(text.split(" "))): add(pop() * 0.6, t0 + k * WORD_T)
         if i == 0: add(buzz(), t0 + 0.05)
         if i == 1: add(riser(1.2), t0 + 0.1)
         if i == 2: add(buzz() * 0.8, t0 + 0.4)
